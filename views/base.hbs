@@ -1,0 +1,194 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Node.js CRUD</title>
+  {{> styles}}
+</head>
+<body>
+
+{{> navbar }}
+
+<div class="container-fluid">
+  <div class="row">
+
+  {{> sidebar}} 
+
+  <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <h2>Logs List</h2>
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModalAdd">Add New</button>
+    
+    <div class="table-responsive">
+      <table class="table table-striped table-sm">
+        <tbody><tr><th>Method</th><th>EndPoint</th><th>Description</th></tr><tr><td>GET</td><td>api/items</td><td>Get All Items</td></tr><tr><td>GET</td><td>api/items/{id}</td><td>Get Single Item</td></tr><tr><td>POST</td><td>api/items</td><td>Create New Item</td></tr><tr><td>PUT</td><td>api/items/{id}</td><td>Update Item</td></tr><tr><td>Delete</td><td>api/items/{id}</td><td>Delete Item</td></tr></tbody>
+      </table>
+    </div>
+
+      <div class="table-responsive">
+      <table id="mytable" class="display table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>User ID</th>
+          <th>Username</th>
+          <th>Staff Name</th>
+          <th>Section</th>
+          <th>Activity</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+         {{#each results}}
+        <tr>
+          <td>{{ id }}</td>
+          <td>{{ user_id }}</td>
+          <td>{{ username }}</td>
+          <td>{{ staff_name }}</td>
+          <td>{{ section }}</td>
+          <td>{{ activity }}</td>
+          <td width="10%">
+            <a href="javascript:void(0);" class="btn btn-sm btn-info edit" data-id="{{ id }}" data-user_id="{{ user_id }}" data-username="{{ username }}" data-staff_name="{{ staff_name }}" data-section="{{ section }}" data-activity="{{ activity }}"><i class="bi bi-pencil"></i></a>
+            <a href="javascript:void(0);" class="btn btn-sm btn-danger delete" data-id="{{ id }}"><i class="bi bi-trash"></i></a>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</div>
+</main>
+</div>
+ 
+    <!-- Modal Add Product-->
+      <form action="/save" method="post">
+        <div class="modal fade" id="myModalAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+         <div class="modal-dialog" role="document">
+           <div class="modal-content">
+             <div class="modal-header">
+               <h5 class="modal-title" id="exampleModalLabel">Add New Logs</h5>
+               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+             </div>
+             <div class="modal-body">
+               <div class="form-group">
+                  <label class="form-label">User ID</label>
+                   <input type="text" name="user_id" class="form-control" placeholder="User ID" required>
+               </div>
+               <div class="form-group">
+                  <label class="form-label">Username</label>
+                   <input type="text" name="username" class="form-control" placeholder="Username" required>
+               </div>
+               <div class="form-group">
+                  <label class="form-label">Staff Name</label>
+                   <input type="text" name="staff_name" class="form-control" placeholder="Staff Name" required>
+               </div>
+               <div class="form-group">
+                  <label class="form-label">Section</label>
+                   <input type="text" name="section" class="form-control" placeholder="Section" required>
+               </div>
+               <div class="form-group">
+                  <label class="form-label">Activity</label>
+                   <textarea name="activity" class="form-control" placeholder="Activity" required></textarea>
+               </div>
+             </div>
+             <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+               <button type="submit" class="btn btn-primary">Save</button>
+             </div>
+           </div>
+         </div>
+        </div>
+     </form>
+ 
+     <!-- Modal Update Product-->
+   <form action="/update" method="post">
+       <div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Edit Log</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                  <label class="form-label">User ID</label>
+                  <input type="text" name="user_id" class="form-control user_id" placeholder="User ID" required>
+              </div>
+              <div class="form-group">
+                  <label class="form-label">Username</label>
+                  <input type="text" name="username" class="form-control username" placeholder="Username" required>
+              </div>
+              <div class="form-group">
+                  <label class="form-label">Staff Name</label>
+                  <input type="text" name="staff_name" class="form-control staff_name" placeholder="Staff Name" required>
+              </div>
+              <div class="form-group">
+                  <label class="form-label">Section</label>
+                  <input type="text" name="section" class="form-control section" placeholder="Section" required>
+              </div>
+              <div class="form-group">
+                  <label class="form-label">Activity</label>
+                  <textarea name="activity" class="form-control activity" placeholder="Activity" required></textarea>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <input type="hidden" name="id" class="id">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+          </div>
+        </div>
+       </div>
+  </form>
+ 
+     <!-- Modal Delete Product-->
+      <form id="add-row-form" action="/delete" method="post">
+         <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+               <div class="modal-content">
+                   <div class="modal-header">
+                      <h5 class="modal-title" id="myModalLabel">Delete Log</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                   </div>
+                   <div class="modal-body">
+                      <strong>Are you sure to delete this data?</strong>
+                   </div>
+                   <div class="modal-footer">
+                        <input type="hidden" name="id" class="form-control id2" required>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success">Delete</button>
+                   </div>
+                    </div>
+            </div>
+         </div>
+     </form>
+
+{{> scripts}}
+
+<script>
+    $(document).ready(function(){
+      $('#mytable').DataTable();
+      $('#mytable').on('click','.edit',function(){
+        var id = $(this).data('id');
+        var user_id = $(this).data('user_id');
+        var username = $(this).data('username');
+        var staff_name = $(this).data('staff_name');
+        var section = $(this).data('section');
+        var activity = $(this).data('activity');
+        $('#EditModal').modal('show');
+        $('.id').val(id);
+        $('.user_id').val(user_id);
+        $('.username').val(username);
+        $('.staff_name').val(staff_name);
+        $('.section').val(section);
+        $('.activity').val(activity);
+      });
+      //showing delete record modal
+      $('#mytable').on('click','.delete',function(){
+        var id = $(this).data('id');
+        $('#DeleteModal').modal('show');
+        $('.id2').val(id);
+      });
+ 
+    });
+</script>
+</body>
+</html>
